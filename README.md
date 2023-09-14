@@ -3,6 +3,8 @@ API specification for bitcoin on and off ramps.
 
 The goal of this project is to provide a unified API specifications for Fiat on-ramps to create interoperability and easier integration of multiple on and offramps into apps.
 
+As first priority we want to support on and off ramps standardization with lightning.
+
 ## Status Specification 
 All FiatLink specifications include a "Status" field. "Status" can be one of the following:
 

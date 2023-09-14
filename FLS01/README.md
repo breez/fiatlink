@@ -13,7 +13,7 @@ As first priority we want to support on and off ramps standardization with light
 
 ## High level flow
 
-![Alt text](image.png)
+![Flow](image.png)
 
 
 ## API endpoints draft

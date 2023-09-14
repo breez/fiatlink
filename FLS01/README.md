@@ -7,18 +7,21 @@
 | Status    | Draft                         |
 
 ## Motivation
-The goal of this specification is to provide standardized API for applications to purchase bitcoin. This will make integrations simple and providers compatible, enabling wider adoption.
+The goal of this specification is to provide standardized API for applications to purchase bitcoin. This will make integrations simple and providers compatible, enabling wider adoption. 
+
+As first priority we want to support on and off ramps standardization with lightning.
 
 ## High level flow
 
 ![Alt text](image.png)
 
 
-## API endpoints 
+## API endpoints draft
 
-| Name      	 | function                | status | type |
-|----------------|-------------------------|--------|-------|
-| /auth/register | user registration       | optional| POST | 
-| /auth/verify   | verify wallet ownership | required | GET |
-| /order         | place order             | required | POST|
-| /orders        | get user orders         | required | GET |
+| Name      	 | function                               | status | type |
+|----------------|----------------------------------------|--------|-------|
+| /auth/register | user registration                      | optional| POST | 
+| /auth/verify   | get secret to verify wallet ownership  | required | GET |
+| /order         | place order                            | required | POST|
+| /orders        | get user orders                        | required | GET |
+| /withdrawal    | provide invoice                        |required  | POST|

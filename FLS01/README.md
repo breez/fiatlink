@@ -64,7 +64,7 @@ Alternative options:
 | /orders        | get order status                                | required | GET  |
 | /withdrawal    | provide invoice                                 |required  | POST |
 | /payout        | get payout options                              | optional | GET  |
-| /payment-options | get supported payment options  and currencies | optional | GET  |
+| /payment-options | get supported payment options  and currencies | required | GET  |
 
 ### verify
 Request a token to be signed by the reciever node as proof of ownership 
@@ -82,7 +82,7 @@ Response:
   "expires_on": "2023-09-20T00:25:11.123Z"
 }
 ```
-
+- `token` random string from the provider that needs to be signed with the node pubkey
 ### quote 
 Get a an quote or estimate from the provider based on amount of fiat you want to spend 
 
@@ -98,6 +98,12 @@ POST /quote
 }
 
 ```
+
+- `amount_fiat` what the client wants to spend
+    - must be greater than 0 and less than 1000
+- `currency_id` is the fiat currency the client wants to be quoted in and will be used as payment
+    - must one of the supported currencies from `/payment-options`
+
 Response:
 
 ```
@@ -105,13 +111,14 @@ Response:
   "id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "amount_fiat": "1000",
   "currency_id": 1,
-  "amount_btc" : 0.008,
+  "amount_sats" : 800000 ,
   "expires_on": "2023-09-20T00:25:11.123Z"
 }
 ```
-
+- `amount_sats` the amount of bitcoin the client will return for the fiat amount specified in the quote
+- `expires_on` until when the order needs to arrive for the quote to be honored
 ### order 
-Confirm an order from quote
+Confirm an order from quote and get payment information in return
 
 
 Request:
@@ -129,14 +136,18 @@ Response:
 
 ```
 {
-  "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
-  "amount_fiat": "1000",
-  "currency_id": 1,
-  "amount_btc" : 0.008,
+  "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "order_status": "placed"
   "expires_on": "2023-09-20T00:25:11.123Z"
+  "payment_info": {
+    "
+  }
 }
 ```
-
+`order_id` should be valid [UUID 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)\
+`order_status`: can be `placed`, `filled`, `finished`
+`payment_info` returns all supported payment methods based on the fiat currency of the order
+`expires_on` until when the payment needs to arrive for the order to be honored
 ### payment-options
 Get a list of supported currencies and their payment options 
 

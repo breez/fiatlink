@@ -1,0 +1,234 @@
+# FLS01 Fiat On-ramp 
+
+
+| Name    	| `fiat_on_ramp`             |
+|---------- |------------------------------	|
+| Version 	| 0.1                           |
+| Status    | Draft                         |
+
+## Motivation
+The goal of this specification is to provide standardized API for applications to purchase bitcoin. This will make integrations simple and providers compatible, enabling wider adoption.
+
+## Fiat to Bitcoin
+
+### Wallet verification 
+To ensure user's ownership of the withdrawing wallet user must sign a message. Service provides the user with a message and user returns that message or part of the predefined message which the user then returns signed with his public key:
+Example:
+```
+"node_pubkey": "02765a281bd188e80a89e6ea5092dcb8ebaaa5c5da341e64327e3fadbadcbc686c",
+"message": "I confirm my bitcoin wallet. [7v7t4Fmb]",
+"signature": "rywfek6717yuqpfpjmghyf173obgswr9uw5wbfsfhc8exjomftm71st4cyxprzkx5juxiokhbxm8rzkxoz8e3zmmpa644tudgt119s91",
+```
+
+This can be part of another API call not a standalone step.
+
+### Order 
+Order scenarios:
+#### User wants to purchase X amount of BTC
+
+Steps:
+1) service needs to provide a quote for the user
+2) user confirms the order
+3) service provides payment methods
+4) user needs to transfer fiat to the service (within specific amount of time?)
+5) user withdraws the proceeds (amount based on agreed quote)
+
+#### User wants to spend X amount of fiat
+
+Steps:
+1) services provides an estimate to the user
+2) user confirms the order
+3) service provides payment methods
+4) user needs to transfer fiat to the service 
+5) user withdraws the proceeds (amount based on execution at the time)
+### Withdrawal 
+Service provides [lnurlw](https://github.com/lnurl/luds/blob/luds/03.md) to the user that user can claim at their convenience. Control of the payout is enforcable so only the pubkey who previously signed the wallet ownership verification message can be the recipient of the funds. 
+
+Using nurlw instead of invoices provided by the users addresses multiple potential issues:
+1) expired invoices and thus failed payments
+2) upfront commitment to payout amounts which means long lived quotes
+
+
+Alternative options:
+1) user provides an invoice for the quoted amount
+2) user provides pubkey and provider opens a channel and pushes the amount (can be used as a backup for 1.)
+
+
+## API endpoints draft
+
+| Name      	 | function                                        | status | type   |
+|----------------|-------------------------------------------------|--------|--------|
+| /verify       | get secret to verify wallet ownership            | required | GET  |
+| /quote         | place order                                     | required | POST |
+| /order         | place order                                     | required | POST |
+| /orders        | get order status                                | required | GET  |
+| /withdrawal    | provide invoice                                 |required  | POST |
+| /payout        | get payout options                              | optional | GET  |
+| /payment-options | get supported payment options  and currencies | optional | GET  |
+
+### verify
+Request a token to be signed by the reciever node as proof of ownership 
+
+Request:
+```
+POST /verify
+```
+Response:
+
+```
+{
+  "id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "token": "yyq6qpj2a",
+  "expires_on": "2023-09-20T00:25:11.123Z"
+}
+```
+
+### quote 
+Get a an quote or estimate from the provider based on amount of fiat you want to spend 
+
+
+Request:
+```
+POST /quote
+
+{
+    "amount_fiat": 1000,
+    "currency_id":1
+
+}
+
+```
+Response:
+
+```
+{
+  "id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "amount_fiat": "1000",
+  "currency_id": 1,
+  "amount_btc" : 0.008,
+  "expires_on": "2023-09-20T00:25:11.123Z"
+}
+```
+
+### order 
+Confirm an order from quote
+
+
+Request:
+```
+POST /order
+
+{
+    "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+    "signature": "c4275e29ed8efecc0162a223403149b60fb38a3adc5c3d435f7071e8e4e0face"
+
+}
+
+```
+Response:
+
+```
+{
+  "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "amount_fiat": "1000",
+  "currency_id": 1,
+  "amount_btc" : 0.008,
+  "expires_on": "2023-09-20T00:25:11.123Z"
+}
+```
+
+### payment-options
+Get a list of supported currencies and their payment options 
+
+Request:
+```
+POST /payment-options
+
+{
+    "currency_code": "<>"  # optional  (chf,eur, usd etc)
+}
+
+```
+Response:
+
+If no currency_code is specified in request:
+```
+{
+  "currencies": [
+    {
+      "eur": {
+        "currency_id": 1,
+        "currency_code": "EUR",
+        "payment_options": [
+          {
+            "option": "SEPA",
+            "id": 1,
+            "fee_rate": 0.005
+          },
+          {
+            "option": "SEPA Instant",
+            "id": 2,
+            "fee_rate": 0.01
+
+          },
+          {
+            "option": "Credit card",
+            "id": 3,
+            "fee_rate": 0.05
+          }
+        ]
+      }
+    },
+    {
+      "chf": {
+        "currency_id": 2,
+        "currency_code": "CHF",
+        "payment_options": [
+          {
+            "option": "SEPA Instant",
+            "id": 2,
+            "fee_rate": 0.01
+          },
+          {
+            "option": "Credit card",
+            "id": 3,
+            "fee_rate": 0.05
+
+          }
+        ]
+      }
+    }
+  ]
+}
+
+```
+
+If currency_code (in this case EUR) is specified in request:
+
+```
+{
+  "currencies": [
+    {
+      "eur": {
+        "currency_id": 1,
+        "currency_code": "EUR",
+        "payment_options": [
+          {
+            "option": "Revolut",
+            "id": 1
+          },
+          {
+            "option": "Sepa Instant",
+            "id": 2
+          },
+          {
+            "option": "Credit card",
+            "id": 3
+          }
+        ]
+      }
+    }
+  ]
+}
+
+```

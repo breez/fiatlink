@@ -62,7 +62,7 @@ Alternative options:
 | /quote         | place order                                     | required | POST |
 | /order         | place order                                     | required | POST |
 | /orders        | get order status                                | required | GET  |
-| /withdrawal    | provide invoice                                 |required  | POST |
+| /withdrawal    | get lnurlw                                      |required  | POST |
 | /payout        | get payout options                              | optional | GET  |
 | /payment-options | get supported payment options  and currencies | required | GET  |
 
@@ -144,10 +144,75 @@ Response:
   }
 }
 ```
-`order_id` should be valid [UUID 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)\
-`order_status`: can be `placed`, `filled`, `finished`
+`order_id` must be valid [UUID 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random))
+
+`order_status` can be `placed`, `filled`, `finished` or `refunded`
+
 `payment_info` returns all supported payment methods based on the fiat currency of the order
+
 `expires_on` until when the payment needs to arrive for the order to be honored
+
+### orders 
+Get order status 
+
+Request:
+```
+POST /order
+
+{
+    "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6"
+}
+
+```
+Response:
+
+```
+{
+  "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "order_status": "finished"
+  "order_status_date": "2023-09-20T00:25:11.123Z"
+}
+```
+`order_id` must be valid [UUID 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random))
+
+`order_status`: can be 
+ 1) `placed` - status upon user confirmation of the quote / pending payment
+ 2) `filled` - status when order is executed and user can withdraw it
+ 3) `finished` - status when user successfully withdrew the funds
+ 4) `refunded` - status when fiat payment was refunded 
+
+`order_status_date` datetime of when the status was made 
+
+### withdrawal 
+Request lnurlw from the provider. User can provide optional fallback onchain address which will be used if the withdrawal is not claimed before the expiration date.
+
+Request:
+```
+POST /withdrawal
+
+{
+    "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+    "failback_onchain": "bc1qcmu7kcwrndyke09zzyl0wv3dqxwlzqkma248kj" #optional
+
+}
+
+```
+Response:
+
+```
+{
+  "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "withdrawal_expiration_date": "2023-09-20T00:25:11.123Z"
+  "lnurlw": "LNURL..."
+}
+```
+`order_id` must be valid [UUID 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random))
+
+`failback_onchain` valid bitcoin address
+
+`withdrawal_expiration_date` datetime when the lnurlw will expire and in case of fallback provided funds will be sent onchain 
+
+
 ### payment-options
 Get a list of supported currencies and their payment options 
 
@@ -174,18 +239,24 @@ If no currency_code is specified in request:
           {
             "option": "SEPA",
             "id": 1,
-            "fee_rate": 0.005
+            "fee_rate": 0.005,
+            "min_amount": 10,
+            "max_amount": 1000
           },
           {
             "option": "SEPA Instant",
             "id": 2,
-            "fee_rate": 0.01
+            "fee_rate": 0.01,
+            "min_amount": 10,
+            "max_amount": 1000
 
           },
           {
             "option": "Credit card",
             "id": 3,
-            "fee_rate": 0.05
+            "fee_rate": 0.05,
+            "min_amount": 10,
+            "max_amount": 1000
           }
         ]
       }
@@ -198,12 +269,16 @@ If no currency_code is specified in request:
           {
             "option": "SEPA Instant",
             "id": 2,
-            "fee_rate": 0.01
+            "fee_rate": 0.01,
+            "min_amount": 10,
+            "max_amount": 1000
           },
           {
             "option": "Credit card",
             "id": 3,
-            "fee_rate": 0.05
+            "fee_rate": 0.05,
+            "min_amount": 10,
+            "max_amount": 1000
 
           }
         ]
@@ -226,15 +301,24 @@ If currency_code (in this case EUR) is specified in request:
         "payment_options": [
           {
             "option": "Revolut",
-            "id": 1
+            "id": 1,
+            "fee_rate": 0.01,
+            "min_amount": 10,
+            "max_amount": 1000
           },
           {
             "option": "Sepa Instant",
-            "id": 2
+            "id": 2,
+            "fee_rate": 0.01,
+            "min_amount": 10,
+            "max_amount": 1000
           },
           {
             "option": "Credit card",
-            "id": 3
+            "id": 3,
+            "fee_rate": 0.01,
+            "min_amount": 10,
+            "max_amount": 1000
           }
         ]
       }

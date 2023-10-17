@@ -85,9 +85,7 @@ Response:
 }
 ```
 - `token` random string from the provider that needs to be signed with the node pubkey
-### quote 
-Get a an quote or estimate from the provider based on amount of fiat you want to spend 
-
+- `session_id` uuid identifiying the client session 
 
 ### auth
 Start a session with signed proof of ownership 
@@ -106,7 +104,9 @@ Response:
   "expires_on": "2023-09-20T00:25:11.123Z"
 }
 ```
-- `token` random string from the provider that needs to be signed with the node pubkey
+- `signature ` token from `/verify` signed by the node 
+
+
 ### quote 
 Get a an quote or estimate from the provider based on amount of fiat you want to spend 
 

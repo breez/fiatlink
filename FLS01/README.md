@@ -123,10 +123,10 @@ Request:
 ```
 POST /quote
 
-{
-    
-    "amount_fiat": 1000,
-    "currency_id":1
+{ 
+  "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
+  "amount_fiat": 1000,
+  "currency_id":1
 
 }
 
@@ -141,7 +141,6 @@ Response:
 
 ```
 {
-  "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
   "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "amount_fiat": "1000",
   "currency_id": 1,
@@ -304,15 +303,15 @@ If no currency_code is specified in request:
         "currency_code": "CHF",
         "payment_options": [
           {
-            "option": "SEPA Instant",
-            "id": 2,
+            "option": "Bank transfer",
+            "id": 1,
             "fee_rate": 0.01,
             "min_amount": 10,
             "max_amount": 1000
           },
           {
             "option": "Credit card",
-            "id": 3,
+            "id": 2,
             "fee_rate": 0.05,
             "min_amount": 10,
             "max_amount": 1000

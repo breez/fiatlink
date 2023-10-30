@@ -59,6 +59,7 @@ Alternative options:
 | Name      	 | function                                        | status | type   |
 |----------------|-------------------------------------------------|--------|--------|
 | /verify       | get secret to verify wallet ownership            | required | GET  |
+| /auth          | verify wallet ownership                         | required | POST |
 | /quote         | place order                                     | required | POST |
 | /order         | place order                                     | required | POST |
 | /orders        | get order status                                | required | GET  |
@@ -71,29 +72,61 @@ Request a token to be signed by the reciever node as proof of ownership
 
 Request:
 ```
-POST /verify
+GET /verify
 ```
 Response:
 
 ```
 {
-  "id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
   "token": "yyq6qpj2a",
   "expires_on": "2023-09-20T00:25:11.123Z"
 }
 ```
 - `token` random string from the provider that needs to be signed with the node pubkey
+- `session_id` uuid identifiying the client session 
+
+
+### auth
+Start a session with signed proof of ownership 
+
+Request:
+```
+POST /auth
+
+
+{
+  "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
+  "id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "signature": "rdfe8mi98o7am51jpocda1zp5d8scdu7rg65nn73fs6mb69t4byer9xned1hntkeq1pqdct9z5owx6bg58w5fmny6p5q783dce8ittjh",
+}
+```
+Response:
+
+```
+{
+  "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
+  "id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "expires_on": "2023-09-20T00:25:11.123Z"
+}
+```
+- `signature ` token from `/verify` signed by the node 
+- `id` client id (optional) 
+
+
 ### quote 
 Get a an quote or estimate from the provider based on amount of fiat you want to spend 
+
 
 
 Request:
 ```
 POST /quote
 
-{
-    "amount_fiat": 1000,
-    "currency_id":1
+{ 
+  "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
+  "amount_fiat": 1000,
+  "currency_id":1
 
 }
 
@@ -108,7 +141,7 @@ Response:
 
 ```
 {
-  "id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "amount_fiat": "1000",
   "currency_id": 1,
   "amount_sats" : 800000 ,
@@ -126,8 +159,8 @@ Request:
 POST /order
 
 {
-    "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
-    "signature": "c4275e29ed8efecc0162a223403149b60fb38a3adc5c3d435f7071e8e4e0face"
+    "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
+    "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6"
 
 }
 
@@ -160,6 +193,7 @@ Request:
 POST /order
 
 {
+    "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
     "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6"
 }
 
@@ -191,6 +225,7 @@ Request:
 POST /withdrawal
 
 {
+    "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
     "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
     "failback_onchain": "bc1qcmu7kcwrndyke09zzyl0wv3dqxwlzqkma248kj" #optional
 
@@ -221,6 +256,7 @@ Request:
 POST /payment-options
 
 {
+    "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
     "currency_code": "<>"  # optional  (chf,eur, usd etc)
 }
 
@@ -267,15 +303,15 @@ If no currency_code is specified in request:
         "currency_code": "CHF",
         "payment_options": [
           {
-            "option": "SEPA Instant",
-            "id": 2,
+            "option": "Bank transfer",
+            "id": 1,
             "fee_rate": 0.01,
             "min_amount": 10,
             "max_amount": 1000
           },
           {
             "option": "Credit card",
-            "id": 3,
+            "id": 2,
             "fee_rate": 0.05,
             "min_amount": 10,
             "max_amount": 1000

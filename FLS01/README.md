@@ -123,9 +123,9 @@ Request:
 ```
 POST /quote
 
-{
-    
-    "amount_fiat": 1000,
+{ 
+  "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
+  "amount_fiat": 1000,
     "currency_id":1
 
 }
@@ -141,7 +141,6 @@ Response:
 
 ```
 {
-  "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
   "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "amount_fiat": "1000",
   "currency_id": 1,

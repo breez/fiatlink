@@ -79,14 +79,13 @@ Response:
 ```
 {
   "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
-  "id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "token": "yyq6qpj2a",
   "expires_on": "2023-09-20T00:25:11.123Z"
 }
 ```
 - `token` random string from the provider that needs to be signed with the node pubkey
 - `session_id` uuid identifiying the client session 
-- `id` client id (optional) 
+
 
 ### auth
 Start a session with signed proof of ownership 
@@ -112,6 +111,7 @@ Response:
 }
 ```
 - `signature ` token from `/verify` signed by the node 
+- `id` client id (optional) 
 
 
 ### quote 

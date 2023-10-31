@@ -58,11 +58,11 @@ Alternative options:
 
 | Name      	 | function                                        | status | type   |
 |----------------|-------------------------------------------------|--------|--------|
-| /verify       | get secret to verify wallet ownership            | required | GET  |
+| /verify        | get secret to verify wallet ownership            | required | GET  |
 | /auth          | verify wallet ownership                         | required | POST |
 | /quote         | place order                                     | required | POST |
 | /order         | place order                                     | required | POST |
-| /orders        | get order status                                | required | GET  |
+| /order-status  | get order status                                | required | GET  |
 | /withdrawal    | get lnurlw                                      |required  | POST |
 | /payout        | get payout options                              | optional | GET  |
 | /payment-options | get supported payment options  and currencies | required | GET  |
@@ -136,6 +136,7 @@ POST /quote
     - must be greater than 0 and less than 1000
 - `currency_id` is the fiat currency the client wants to be quoted in and will be used as payment
     - must one of the supported currencies from `/payment-options`
+- `payment_option_id` needs to be one of `/payment-options` and needs to be provided at this step for the fee calculation
 
 Response:
 
@@ -186,16 +187,39 @@ Response:
 
 `order_status` can be `placed`, `filled`, `finished` or `refunded`
 
-`payment_info` returns the payment processing details
-
 `expires_on` until when the payment needs to arrive for the order to be honored
 
-### orders 
+`payment_info` returns the payment processing details
+examples:
+```
+# SEPA
+"payment_info": {
+    "payment_option_id":1, 
+    "payment_details": {
+      "provider_iban": "string", 
+      "provider_name": "string", 
+      "provider_address": "string",
+      "provider_bank": "string",
+      "provider_country": "string",
+      "provider_bic": "string"
+  }
+
+# Credit Card
+"payment_info": {
+    "payment_option_id":3,
+    "payment_details": {
+      "payment_url": "url"
+    }
+  }
+
+```
+
+### order-status 
 Get order status 
 
 Request:
 ```
-POST /order
+POST /order-status
 
 {
     "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",

@@ -1,4 +1,4 @@
-# FLS01 Fiat On-ramp  2
+# FLS01 Fiat On-ramp 
 
 
 | Name    	| `fiat_on_ramp`             |
@@ -99,6 +99,7 @@ POST /auth
   "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
   "id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "signature": "rdfe8mi98o7am51jpocda1zp5d8scdu7rg65nn73fs6mb69t4byer9xned1hntkeq1pqdct9z5owx6bg58w5fmny6p5q783dce8ittjh",
+  "failback_onchain": "bc1qcmu7kcwrndyke09zzyl0wv3dqxwlzqkma248kj" #optional
 }
 ```
 Response:
@@ -236,8 +237,6 @@ POST /withdrawal
 {
     "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
     "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
-    "failback_onchain": "bc1qcmu7kcwrndyke09zzyl0wv3dqxwlzqkma248kj" #optional
-
 }
 
 ```

@@ -208,6 +208,10 @@ Response:
 ```
 {
   "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "amount_fiat": "1000",
+  "currency_id": 1,
+  "payment_option_id":1,
+  "amount_sats" : 800000 ,
   "order_status": "finished"
   "order_status_date": "2023-09-20T00:25:11.123Z"
 }

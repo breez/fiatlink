@@ -126,8 +126,8 @@ POST /quote
 { 
   "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
   "amount_fiat": 1000,
-  "currency_id":1
-
+  "currency_id":1,
+  "payment_option_id":1
 }
 
 ```
@@ -144,6 +144,7 @@ Response:
   "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "amount_fiat": "1000",
   "currency_id": 1,
+  "payment_option_id":1,
   "amount_sats" : 800000 ,
   "expires_on": "2023-09-20T00:25:11.123Z"
 }
@@ -171,7 +172,11 @@ Response:
 {
   "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "order_status": "placed"
-  "expires_on": "2023-09-20T00:25:11.123Z"
+  "amount_fiat": "1000",
+  "currency_id": 1,
+  "payment_option_id":1,
+  "amount_sats" : 800000 ,
+  "expires_on": "2023-09-20T00:25:11.123Z",
   "payment_info": {
     "
   }
@@ -181,7 +186,7 @@ Response:
 
 `order_status` can be `placed`, `filled`, `finished` or `refunded`
 
-`payment_info` returns all supported payment methods based on the fiat currency of the order
+`payment_info` returns the payment processing details
 
 `expires_on` until when the payment needs to arrive for the order to be honored
 
@@ -203,6 +208,10 @@ Response:
 ```
 {
   "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "amount_fiat": "1000",
+  "currency_id": 1,
+  "payment_option_id":1,
+  "amount_sats" : 800000 ,
   "order_status": "finished"
   "order_status_date": "2023-09-20T00:25:11.123Z"
 }

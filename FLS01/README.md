@@ -182,7 +182,7 @@ Response:
 
 `order_status` can be `placed`, `filled`, `finished` or `refunded`
 
-`payment_info` returns all supported payment methods based on the fiat currency of the order
+`payment_info` returns the payment processing details
 
 `expires_on` until when the payment needs to arrive for the order to be honored
 

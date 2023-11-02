@@ -72,7 +72,7 @@ Request a token to be signed by the reciever node as proof of ownership
 
 Request:
 ```
-GET /verify
+GET /verify?node_pubkey=02765a281bd188e80a89e6ea5092dcb8ebaaa5c5da341e64327e3fadbadcbc686c
 ```
 Response:
 

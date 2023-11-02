@@ -177,6 +177,7 @@ Response:
   "payment_option_id":1,
   "amount_sats" : 800000 ,
   "expires_on": "2023-09-20T00:25:11.123Z",
+  "payment_url": "https://providerDomain/?order-id=8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "payment_info": {
     "
   }

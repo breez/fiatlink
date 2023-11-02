@@ -189,8 +189,11 @@ Response:
 
 `expires_on` until when the payment needs to arrive for the order to be honored
 
-`payment_info` returns the payment processing details
-examples:
+`payment_info` returns the payment processing details with the following with one or both of the fields below
+- `payment_url` (optional) url for payment through the providers website
+- `payment_details` (optional) bank transfer payment details
+
+Examples of :
 ```
 # SEPA
 "payment_info": {
@@ -207,11 +210,22 @@ examples:
 # Credit Card
 "payment_info": {
     "payment_option_id":3,
-    "payment_details": {
-      "payment_url": "url"
-    }
+    "payment_url": "url"
   }
 
+
+# Bank transfer
+"payment_info": {
+    "payment_option_id":5, 
+    "payment_url": "url"
+    "payment_details": {
+      "provider_accountnumber": "string", 
+      "provider_name": "string", 
+      "provider_address": "string",
+      "provider_bank": "string",
+      "provider_country": "string",
+      "provider_bic": "string"
+  }
 ```
 
 ### order-status 
@@ -337,14 +351,14 @@ If no currency_code is specified in request:
         "payment_options": [
           {
             "option": "Bank transfer",
-            "id": 1,
+            "id": 5,
             "fee_rate": 0.01,
             "min_amount": 10,
             "max_amount": 1000
           },
           {
             "option": "Credit card",
-            "id": 2,
+            "id": 6,
             "fee_rate": 0.05,
             "min_amount": 10,
             "max_amount": 1000

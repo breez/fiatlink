@@ -62,7 +62,7 @@ Alternative options:
 | /session       | verify wallet ownership                         | required | POST |
 | /quote         | place order                                     | required | POST |
 | /order         | place order                                     | required | POST |
-| /order-status  | get order status                                | required | GET  |
+| /order-status  | get order status                                | required | POST |
 | /withdrawal    | get lnurlw                                      |required  | POST |
 | /payout        | get payout options                              | optional | GET  |
 | /payment-options | get supported payment options  and currencies | required | GET  |
@@ -245,16 +245,25 @@ Response:
 
 ```
 {
-  "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
-  "amount_fiat": "1000",
-  "currency_id": 1,
-  "payment_option_id":1,
-  "amount_sats" : 800000 ,
-  "order_status": "finished"
-  "order_status_date": "2023-09-20T00:25:11.123Z"
+  "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6": {
+    "amount_fiat": "1000",
+    "currency_id": 1,
+    "payment_option_id":1,
+    "amount_sats" : 800000 ,
+    "order_status": "finished"
+    "order_status_date": "2023-09-20T00:25:11.123Z"
+  },
+    "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f0333a": {
+    "amount_fiat": "1000",
+    "currency_id": 1,
+    "payment_option_id":1,
+    "amount_sats" : 800000 ,
+    "order_status": "finished"
+    "order_status_date": "2023-09-20T00:25:11.123Z"
+  },
 }
 ```
-`order_id` must be valid [UUID 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random))
+`order_id` (optional) must be valid [UUID 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)). If no order_id is provided all orders belonging to the user are shown
 
 `order_status`: can be 
  1) `placed` - status upon user confirmation of the quote / pending payment

@@ -11,8 +11,8 @@ The goal of this specification is to provide standardized API for applications t
 
 ## Fiat to Bitcoin
 
-### Wallet verification 
-To ensure user's ownership of the withdrawing wallet user must sign a message. Service provides the user with a message and user returns that message or part of the predefined message which the user then returns signed with his public key:
+### Wallet verification (optional)
+To ensure user's ownership of the withdrawing wallet user can sign a message. Service provides the user with a message and user returns that message or part of the predefined message which the user then returns signed with his public key:
 Example:
 ```
 "node_pubkey": "02765a281bd188e80a89e6ea5092dcb8ebaaa5c5da341e64327e3fadbadcbc686c",

@@ -12,7 +12,7 @@ The goal of this specification is to provide standardized API for applications t
 ## Fiat to Bitcoin
 
 ### Wallet verification (optional)
-To ensure user's ownership of the withdrawing wallet user can sign a message. Service provides the user with a message and user returns that message or part of the predefined message which the user then returns signed with his public key:
+Some jurisdictions require wallet verification by users so this spec supports it within the flow. To ensure user's ownership of the withdrawing wallet user can sign a message. Service provides the user with a message and user returns that message or part of the predefined message which the user then returns signed with his public key:
 Example:
 ```
 "node_pubkey": "02765a281bd188e80a89e6ea5092dcb8ebaaa5c5da341e64327e3fadbadcbc686c",
@@ -59,7 +59,7 @@ Alternative options:
 | Name      	 | function                                        | status | type   |
 |----------------|-------------------------------------------------|--------|--------|
 | /verify       | get secret to verify wallet ownership            | required | GET  |
-| /auth          | verify wallet ownership                         | required | POST |
+| /session       | verify wallet ownership                         | required | POST |
 | /quote         | place order                                     | required | POST |
 | /order         | place order                                     | required | POST |
 | /orders        | get order status                                | required | GET  |
@@ -83,21 +83,21 @@ Response:
   "expires_on": "2023-09-20T00:25:11.123Z"
 }
 ```
-- `token` random string from the provider that needs to be signed with the node pubkey
+- `token` (optional) random string from the provider that needs to be signed with the node pubkey in case wallet ownership proof is required. If token is not present then AOPP is not required.
 - `session_id` uuid identifiying the client session 
 
 
-### auth
-Start a session with signed proof of ownership 
+### session
+Start a session with optional signed proof of ownership. If Proof of Ownership is not required signature can be a random alphanumeric value.
 
 Request:
 ```
-POST /auth
+POST /session
 
 
 {
   "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
-  "id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "app_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "signature": "rdfe8mi98o7am51jpocda1zp5d8scdu7rg65nn73fs6mb69t4byer9xned1hntkeq1pqdct9z5owx6bg58w5fmny6p5q783dce8ittjh",
 }
 ```
@@ -106,12 +106,12 @@ Response:
 ```
 {
   "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
-  "id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+  "app_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "expires_on": "2023-09-20T00:25:11.123Z"
 }
 ```
-- `signature ` token from `/verify` signed by the node 
-- `id` client id (optional) 
+- `signature ` token from `/verify` signed by the node. In case `token` is not present in the `/verify` response signature is a random alphanumeric value. 
+- `app_id` app id (optional) 
 
 
 ### quote 

@@ -62,7 +62,7 @@ Alternative options:
 | /session       | verify wallet ownership                         | required | POST |
 | /quote         | place order                                     | required | POST |
 | /order         | place order                                     | required | POST |
-| /orders        | get order status                                | required | GET  |
+| /order-status  | get order status                                | required | POST |
 | /withdrawal    | get lnurlw                                      |required  | POST |
 | /payout        | get payout options                              | optional | GET  |
 | /payment-options | get supported payment options  and currencies | required | GET  |
@@ -136,6 +136,7 @@ POST /quote
     - must be greater than 0 and less than 1000
 - `currency_id` is the fiat currency the client wants to be quoted in and will be used as payment
     - must one of the supported currencies from `/payment-options`
+- `payment_option_id` needs to be one of `/payment-options` and needs to be provided at this step for the fee calculation
 
 Response:
 
@@ -186,16 +187,53 @@ Response:
 
 `order_status` can be `placed`, `filled`, `finished` or `refunded`
 
-`payment_info` returns the payment processing details
-
 `expires_on` until when the payment needs to arrive for the order to be honored
 
-### orders 
+`payment_info` returns the payment processing details with the following with one or both of the fields below
+- `payment_url` (optional) url for payment through the providers website
+- `payment_details` (optional) bank transfer payment details
+
+Examples of :
+```
+# SEPA
+"payment_info": {
+    "payment_option_id":1, 
+    "payment_details": {
+      "provider_iban": "string", 
+      "provider_name": "string", 
+      "provider_address": "string",
+      "provider_bank": "string",
+      "provider_country": "string",
+      "provider_bic": "string"
+  }
+
+# Credit Card
+"payment_info": {
+    "payment_option_id":3,
+    "payment_url": "url"
+  }
+
+
+# Bank transfer
+"payment_info": {
+    "payment_option_id":5, 
+    "payment_url": "url"
+    "payment_details": {
+      "provider_accountnumber": "string", 
+      "provider_name": "string", 
+      "provider_address": "string",
+      "provider_bank": "string",
+      "provider_country": "string",
+      "provider_bic": "string"
+  }
+```
+
+### order-status 
 Get order status 
 
 Request:
 ```
-POST /order
+POST /order-status
 
 {
     "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
@@ -207,16 +245,25 @@ Response:
 
 ```
 {
-  "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
-  "amount_fiat": "1000",
-  "currency_id": 1,
-  "payment_option_id":1,
-  "amount_sats" : 800000 ,
-  "order_status": "finished"
-  "order_status_date": "2023-09-20T00:25:11.123Z"
+  "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6": {
+    "amount_fiat": "1000",
+    "currency_id": 1,
+    "payment_option_id":1,
+    "amount_sats" : 800000 ,
+    "order_status": "finished"
+    "order_status_date": "2023-09-20T00:25:11.123Z"
+  },
+    "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f0333a": {
+    "amount_fiat": "1000",
+    "currency_id": 1,
+    "payment_option_id":1,
+    "amount_sats" : 800000 ,
+    "order_status": "finished"
+    "order_status_date": "2023-09-20T00:25:11.123Z"
+  },
 }
 ```
-`order_id` must be valid [UUID 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random))
+`order_id` (optional) must be valid [UUID 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)). If no order_id is provided all orders belonging to the user are shown
 
 `order_status`: can be 
  1) `placed` - status upon user confirmation of the quote / pending payment
@@ -313,14 +360,14 @@ If no currency_code is specified in request:
         "payment_options": [
           {
             "option": "Bank transfer",
-            "id": 1,
+            "id": 5,
             "fee_rate": 0.01,
             "min_amount": 10,
             "max_amount": 1000
           },
           {
             "option": "Credit card",
-            "id": 2,
+            "id": 6,
             "fee_rate": 0.05,
             "min_amount": 10,
             "max_amount": 1000

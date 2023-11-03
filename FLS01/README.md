@@ -113,7 +113,7 @@ Response:
 ```
 - `signature ` token from `/verify` signed by the node. In case `token` is not present in the `/verify` response signature is a random alphanumeric value. 
 - `app_id` app id (optional) 
-- `node_pubkey` pubkey of a node that signed the `token`
+- `node_pubkey` (optional) pubkey of a node that signed the `token`. If  `token` is not present in the `/verify` response `node_pubkey` is not needed 
 
 
 ### quote 

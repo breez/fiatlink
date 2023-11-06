@@ -99,6 +99,7 @@ POST /session
   "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
   "app_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "signature": "rdfe8mi98o7am51jpocda1zp5d8scdu7rg65nn73fs6mb69t4byer9xned1hntkeq1pqdct9z5owx6bg58w5fmny6p5q783dce8ittjh",
+  "node_pubkey": "0288037d3f0bdcfb240402b43b80cdc32e41528b3e2ebe05884aff507d71fca71a"
 }
 ```
 Response:
@@ -112,6 +113,7 @@ Response:
 ```
 - `signature ` token from `/verify` signed by the node. In case `token` is not present in the `/verify` response signature is a random alphanumeric value. 
 - `app_id` app id (optional) 
+- `node_pubkey` (optional) pubkey of a node that signed the `token`. If  `token` is not present in the `/verify` response `node_pubkey` is not needed 
 
 
 ### quote 

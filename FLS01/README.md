@@ -60,7 +60,7 @@ Alternative options:
 |----------------|-------------------------------------------------|--------|--------|
 | /verify       | get secret to verify wallet ownership            | required | GET  |
 | /session       | verify wallet ownership                         | required | POST |
-| /quote         | place order                                     | required | POST |
+| /quote         | get quote/estimate                              | required | POST |
 | /order         | place order                                     | required | POST |
 | /order-status  | get order status                                | required | POST |
 | /withdrawal    | get lnurlw                                      |required  | POST |

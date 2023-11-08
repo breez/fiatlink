@@ -121,7 +121,8 @@ Get a an quote or estimate from the provider based on amount of fiat you want to
 
 Request:
 ```
-POST /quote
+# client wants to spend 1000chf
+POST /quote   
 
 { 
   "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
@@ -130,10 +131,19 @@ POST /quote
   "payment_option_id":1
 }
 
+# client wants to purchase 0.005btc
+POST /quote   
+
+{ 
+  "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
+  "amount_btc": 5000000 # sats
+  "currency_id":1,
+  "payment_option_id":1
+}
 ```
 
-- `amount_fiat` what the client wants to spend
-    - must be greater than 0 and less than 1000
+- `amount_fiat` (optional) amount of fiat the client wants to spend 
+- `amount_sats` (optional) amount of bitcoin the client wants to purchase (unit sats)
 - `currency_id` is the fiat currency the client wants to be quoted in and will be used as payment
     - must one of the supported currencies from `/payment-options`
 - `payment_option_id` needs to be one of `/payment-options` and needs to be provided at this step for the fee calculation
@@ -146,12 +156,18 @@ Response:
   "amount_fiat": "1000",
   "currency_id": 1,
   "payment_option_id":1,
-  "amount_sats" : 800000 ,
+  "amount_sats" : 800000,
+  "is_estimate" : false,
+  "btc_price": 69420,
   "expires_on": "2023-09-20T00:25:11.123Z"
 }
 ```
-- `amount_sats` the amount of bitcoin the client will return for the fiat amount specified in the quote
-- `expires_on` until when the order needs to arrive for the quote to be honored
+- `quote_id` id of this quote which needs to be referenced while placing the order
+- `amount_sats` the amount of bitcoin the client will return for the fiat amount specified in the quote (unit sats)
+- `is_estimate` can be `true` or `false`,at discretion of the provider if he wants to provide a short duration binding quote or estimate for best execution
+- `btc_price` quoted or estimated price 
+- `expires_on` (optional) until when the payment for order needs to arrive for the quote to be honored. if parameter doesn't exist it means the response is an estimate that has no expiration
+
 ### order 
 Confirm an order from quote and get payment information in return
 

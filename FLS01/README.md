@@ -69,6 +69,28 @@ All units in the spec are expressed in the smallest denomination - sats and cent
 | /withdrawal    | get lnurlw                                      |required  | POST |
 | /payout        | get payout options                              | optional | GET  |
 | /payment-options | get supported payment options  and currencies | required | GET  |
+| /features | get supported features | required | GET  |
+
+### features 
+Return a list of supported features by the provider
+
+| feature | function | status |
+|---------|----------|---------|
+| quotes | provider supports binding quotes | optional 
+| estimates| provider supports non-binding estimates | optional 
+| on_chain_fallback | provider supports on-chain fallback | optional
+
+GET /features
+```
+Response:
+
+```
+{
+  "supported_features: [
+    "quotes": true,
+    "estimates":  true,
+  ]
+}
 
 
 ### verify

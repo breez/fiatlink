@@ -54,6 +54,9 @@ Alternative options:
 2) user provides pubkey and provider opens a channel and pushes the amount (can be used as a backup for 1.)
 
 
+### Units
+All units in the spec are expressed in the smallest denomination - sats and cents.
+
 ## API endpoints draft
 
 | Name      	 | function                                        | status | type   |
@@ -351,22 +354,22 @@ If no currency_code is specified in request:
             "option": "SEPA",
             "id": 1,
             "fee_rate": 0.005,
-            "min_amount": 10,
+            "min_amount": 1000, # unit cents
             "max_amount": 100000 # unit cents
           },
           {
             "option": "SEPA Instant",
             "id": 2,
             "fee_rate": 0.01,
-            "min_amount": 10,
-            "max_amount": 1000
+            "min_amount": 1000, # unit cents
+            "max_amount": 100000 # unit cents
 
           },
           {
             "option": "Credit card",
             "id": 3,
             "fee_rate": 0.05,
-            "min_amount": 10,
+            "min_amount": 2500, # unit cents
             "max_amount": 100000 # unit cents 
           }
         ]

@@ -163,14 +163,21 @@ Response:
   "amount_sats" : 800000,
   "is_estimate" : false,
   "btc_price": 69420,
+  "order_fee": 1234
   "expires_on": "2023-09-20T00:25:11.123Z"
 }
 ```
-- `quote_id` id of this quote which needs to be referenced while placing the order
-- `amount_sats` the amount of bitcoin the client will return for the fiat amount specified in the quote (unit sats)
-- `is_estimate` can be `true` or `false`,at discretion of the provider if he wants to provide a short duration binding quote or estimate for best execution
-- `btc_price` quoted or estimated price 
-- `expires_on` (optional) until when the payment for order needs to arrive for the quote to be honored. if parameter doesn't exist it means the response is an estimate that has no expiration
+`quote_id` id of this quote which needs to be referenced while placing the order
+
+`amount_sats` the amount of bitcoin the client will return for the fiat amount specified in the quote (unit sats)
+
+`is_estimate` can be `true` or `false`,at discretion of the provider if he wants to provide a short duration binding quote or estimate for best execution
+
+`order_fee` (optional) fee taken by the provider for binding quotes
+
+`btc_price` quoted or estimated price 
+
+`expires_on` (optional) until when the payment for order needs to arrive for the quote to be honored. if parameter doesn't exist it means the response is an estimate that has no expiration
 
 ### order 
 Confirm an order from quote and get payment information in return

@@ -271,6 +271,7 @@ Response:
     "payment_option_id":1,
     "amount_sats" : 800000 ,
     "btc_price": 69420
+    "order_fee": 1234
     "order_status": "finished"
     "order_status_date": "2023-09-20T00:25:11.123Z"
   },
@@ -280,6 +281,7 @@ Response:
     "payment_option_id":1,
     "amount_fiat" : 800000 ,
     "btc_price": 69420
+    "order_fee": 1234
     "order_status": "finished"
     "order_status_date": "2023-09-20T00:25:11.123Z"
   },
@@ -294,6 +296,7 @@ Response:
  4) `refunded` - status when fiat payment was refunded 
 
 `order_status_date` datetime of when the status was made 
+`order_fee` fee taken by the provider on the order 
 
 ### withdrawal 
 Request lnurlw from the provider. User can provide optional fallback onchain address which will be used if the withdrawal is not claimed before the expiration date.

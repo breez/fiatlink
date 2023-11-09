@@ -30,7 +30,7 @@ Steps:
 1) service needs to provide a quote for the user
 2) user confirms the order
 3) service provides payment methods
-4) user needs to transfer fiat to the service (within specific amount of time?)
+4) user needs to transfer fiat to the service
 5) user withdraws the proceeds (amount based on agreed quote)
 
 #### User wants to spend X amount of fiat
@@ -40,7 +40,7 @@ Steps:
 2) user confirms the order
 3) service provides payment methods
 4) user needs to transfer fiat to the service 
-5) user withdraws the proceeds (amount based on execution at the time)
+5) user withdraws the proceeds
 ### Withdrawal 
 Service provides [lnurlw](https://github.com/lnurl/luds/blob/luds/03.md) to the user that user can claim at their convenience. Control of the payout is enforcable so only the pubkey who previously signed the wallet ownership verification message can be the recipient of the funds. 
 
@@ -66,6 +66,7 @@ Alternative options:
 | /withdrawal    | get lnurlw                                      |required  | POST |
 | /payout        | get payout options                              | optional | GET  |
 | /payment-options | get supported payment options  and currencies | required | GET  |
+
 
 ### verify
 Request a token to be signed by the reciever node as proof of ownership 
@@ -142,7 +143,7 @@ POST /quote
 }
 ```
 
-- `amount_fiat` (optional) amount of fiat the client wants to spend 
+- `amount_fiat` (optional) amount of fiat the client wants to spend (unit cents)
 - `amount_sats` (optional) amount of bitcoin the client wants to purchase (unit sats)
 - `currency_id` is the fiat currency the client wants to be quoted in and will be used as payment
     - must one of the supported currencies from `/payment-options`
@@ -153,7 +154,7 @@ Response:
 ```
 {
   "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
-  "amount_fiat": "1000",
+  "amount_fiat": 100000, # in cents
   "currency_id": 1,
   "payment_option_id":1,
   "amount_sats" : 800000,
@@ -189,7 +190,7 @@ Response:
 {
   "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "order_status": "placed"
-  "amount_fiat": "1000",
+  "amount_fiat": 1000,
   "currency_id": 1,
   "payment_option_id":1,
   "amount_sats" : 800000 ,
@@ -262,18 +263,20 @@ Response:
 ```
 {
   "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6": {
-    "amount_fiat": "1000",
+    "amount_fiat": 1000,
     "currency_id": 1,
     "payment_option_id":1,
     "amount_sats" : 800000 ,
+    "btc_price": 69420
     "order_status": "finished"
     "order_status_date": "2023-09-20T00:25:11.123Z"
   },
     "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f0333a": {
-    "amount_fiat": "1000",
+    "amount_fiat": 1000,
     "currency_id": 1,
     "payment_option_id":1,
-    "amount_sats" : 800000 ,
+    "amount_fiat" : 800000 ,
+    "btc_price": 69420
     "order_status": "finished"
     "order_status_date": "2023-09-20T00:25:11.123Z"
   },
@@ -349,7 +352,7 @@ If no currency_code is specified in request:
             "id": 1,
             "fee_rate": 0.005,
             "min_amount": 10,
-            "max_amount": 1000
+            "max_amount": 100000 # unit cents
           },
           {
             "option": "SEPA Instant",
@@ -364,7 +367,7 @@ If no currency_code is specified in request:
             "id": 3,
             "fee_rate": 0.05,
             "min_amount": 10,
-            "max_amount": 1000
+            "max_amount": 100000 # unit cents 
           }
         ]
       }
@@ -379,14 +382,14 @@ If no currency_code is specified in request:
             "id": 5,
             "fee_rate": 0.01,
             "min_amount": 10,
-            "max_amount": 1000
+            "max_amount": 100000 # unit cents
           },
           {
             "option": "Credit card",
             "id": 6,
             "fee_rate": 0.05,
             "min_amount": 10,
-            "max_amount": 1000
+            "max_amount": 100000 # unit cents
 
           }
         ]
@@ -412,21 +415,21 @@ If currency_code (in this case EUR) is specified in request:
             "id": 1,
             "fee_rate": 0.01,
             "min_amount": 10,
-            "max_amount": 1000
+            "max_amount": 100000 # unit cents
           },
           {
             "option": "Sepa Instant",
             "id": 2,
             "fee_rate": 0.01,
             "min_amount": 10,
-            "max_amount": 1000
+            "max_amount": 100000 # unit cents
           },
           {
             "option": "Credit card",
             "id": 3,
             "fee_rate": 0.01,
             "min_amount": 10,
-            "max_amount": 1000
+            "max_amount": 100000 # unit cents
           }
         ]
       }

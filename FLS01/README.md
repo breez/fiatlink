@@ -130,7 +130,7 @@ POST /quote
 
 { 
   "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
-  "amount_fiat": 1000,
+  "amount_fiat": 100000, # in cents 
   "currency_id":1,
   "payment_option_id":1
 }
@@ -140,7 +140,7 @@ POST /quote
 
 { 
   "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
-  "amount_btc": 5000000 # sats
+  "amount_btc": 5000000 # in sats
   "currency_id":1,
   "payment_option_id":1
 }
@@ -160,10 +160,10 @@ Response:
   "amount_fiat": 100000, # in cents
   "currency_id": 1,
   "payment_option_id":1,
-  "amount_sats" : 800000,
+  "amount_sats" : 800000, # in sats
   "is_estimate" : false,
-  "btc_price": 69420,
-  "order_fee": 1234
+  "btc_price": 6942000, # in cents
+  "order_fee": 1234, # in cents 
   "expires_on": "2023-09-20T00:25:11.123Z"
 }
 ```
@@ -171,13 +171,13 @@ Response:
 
 `amount_sats` the amount of bitcoin the client will return for the fiat amount specified in the quote (unit sats)
 
-`is_estimate` can be `true` or `false`,at discretion of the provider if he wants to provide a short duration binding quote or estimate for best execution
+`is_estimate` can be `true` or `false`,at discretion of the provider if he wants to provide a short duration binding quote or estimate
 
-`order_fee` (optional) fee taken by the provider for binding quotes
+`order_fee` fee taken by the provider for quotes and estimates, in fiat (unit cents)
 
-`btc_price` quoted or estimated price 
+`btc_price` quoted or estimated price  (unit cents)
 
-`expires_on` (optional) until when the payment for order needs to arrive for the quote to be honored. if parameter doesn't exist it means the response is an estimate that has no expiration
+`expires_on` (optional) until when the payment for order needs to arrive for the quote to be honored
 
 ### order 
 Confirm an order from quote and get payment information in return
@@ -200,10 +200,10 @@ Response:
 {
   "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
   "order_status": "placed"
-  "amount_fiat": 1000,
+  "amount_fiat": 100000, # in cents
   "currency_id": 1,
   "payment_option_id":1,
-  "amount_sats" : 800000 ,
+  "amount_sats" : 800000, # in sats
   "expires_on": "2023-09-20T00:25:11.123Z",
   "payment_info": {
     "
@@ -273,23 +273,23 @@ Response:
 ```
 {
   "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6": {
-    "amount_fiat": 1000,
+    "amount_fiat": 100000, # in cents
     "currency_id": 1,
     "payment_option_id":1,
-    "amount_sats" : 800000 ,
-    "btc_price": 69420
-    "order_fee": 1234
-    "order_status": "finished"
+    "amount_sats" : 800000, # in sats
+    "btc_price": 6942000, # in cents
+    "order_fee": 1234, # in cents
+    "order_status": "finished",
     "order_status_date": "2023-09-20T00:25:11.123Z"
   },
     "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f0333a": {
-    "amount_fiat": 1000,
+    "amount_fiat": 100000, # in cents
     "currency_id": 1,
     "payment_option_id":1,
-    "amount_fiat" : 800000 ,
-    "btc_price": 69420
-    "order_fee": 1234
-    "order_status": "finished"
+    "amount_sats" : 800000, # in sats
+    "btc_price": 6942000, # in cents
+    "order_fee": 1234, # in cents
+    "order_status": "finished",
     "order_status_date": "2023-09-20T00:25:11.123Z"
   },
 }
@@ -393,15 +393,15 @@ If no currency_code is specified in request:
           {
             "option": "Bank transfer",
             "id": 5,
-            "fee_rate": 0.01,
-            "min_amount": 10,
+            "fee_rate": 0.01, 
+            "min_amount": 10, # unit cents
             "max_amount": 100000 # unit cents
           },
           {
             "option": "Credit card",
             "id": 6,
             "fee_rate": 0.05,
-            "min_amount": 10,
+            "min_amount": 10, #unit cents
             "max_amount": 100000 # unit cents
 
           }
@@ -427,21 +427,21 @@ If currency_code (in this case EUR) is specified in request:
             "option": "Revolut",
             "id": 1,
             "fee_rate": 0.01,
-            "min_amount": 10,
+            "min_amount": 1000, # unit cents
             "max_amount": 100000 # unit cents
           },
           {
             "option": "Sepa Instant",
             "id": 2,
             "fee_rate": 0.01,
-            "min_amount": 10,
+            "min_amount": 1000, # unit cents
             "max_amount": 100000 # unit cents
           },
           {
             "option": "Credit card",
             "id": 3,
             "fee_rate": 0.01,
-            "min_amount": 10,
+            "min_amount": 1000, # unit cents
             "max_amount": 100000 # unit cents
           }
         ]

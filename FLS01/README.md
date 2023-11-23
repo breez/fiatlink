@@ -214,11 +214,31 @@ POST /order
 
 {
     "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
-    "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6"
+    "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+    "webhook_url": "https://webhook.example.com/"
 
 }
 
 ```
+`webhook_url` (optional) url where the provider can send notifications to the user. Triggering the webhook is done by initiating a POST request with the following json payload:
+
+`{ "type": <hook_type>, "data": <hook_data> }`
+
+Example:
+Order filled and ready for withdrawal
+
+```
+{
+  "type": "withdrawal_ready",
+  "data": {
+    "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+    "order_status": "filled"
+  }
+
+}
+
+```
+
 Response:
 
 ```

@@ -69,6 +69,29 @@ All units in the spec are expressed in the smallest denomination - sats and cent
 | /withdrawal    | get lnurlw                                      |required  | POST |
 | /payout        | get payout options                              | optional | GET  |
 | /payment-options | get supported payment options  and currencies | required | GET  |
+| /features | get supported features | required | GET  |
+
+### features 
+Return a list of supported features by the provider
+
+| feature | function | status |
+|---------|----------|---------|
+| quotes | provider supports binding quotes | optional 
+| estimates| provider supports non-binding estimates | optional 
+| on_chain_fallback | provider supports on-chain fallback | optional
+
+GET /features
+```
+Response:
+
+```
+{
+  "supported_features: [
+    "quotes": true,
+    "estimates":  true,
+    "on_chain_fallback": false
+  ]
+}
 
 
 ### verify
@@ -191,11 +214,31 @@ POST /order
 
 {
     "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
-    "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6"
+    "quote_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+    "webhook_url": "https://webhook.example.com/"
 
 }
 
 ```
+`webhook_url` (optional) url where the provider can send notifications to the user. Triggering the webhook is done by initiating a POST request with the following json payload:
+
+`{ "type": <hook_type>, "data": <hook_data> }`
+
+Example:
+Order filled and ready for withdrawal
+
+```
+{
+  "type": "withdrawal_ready",
+  "data": {
+    "order_id": "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6",
+    "order_status": "filled"
+  }
+
+}
+
+```
+
 Response:
 
 ```

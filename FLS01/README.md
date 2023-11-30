@@ -79,19 +79,21 @@ Return a list of supported features by the provider
 | quotes | provider supports binding quotes | optional 
 | estimates| provider supports non-binding estimates | optional 
 | on_chain_fallback | provider supports on-chain fallback | optional
+| webhook | provider supports webhook notifications | optional
 
 GET /features
 ```
 Response:
-
-```
 {
   "supported_features: [
     "quotes": true,
     "estimates":  true,
-    "on_chain_fallback": false
+    "on_chain_fallback": false,
+    "webhook": true
   ]
 }
+```
+
 
 
 ### verify

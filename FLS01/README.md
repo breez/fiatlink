@@ -89,7 +89,8 @@ Response:
   "supported_features: [
     "quotes": true,
     "estimates":  true,
-    "on_chain_fallback": false
+    "on_chain_fallback": false,
+    "webhook": true
   ]
 }
 

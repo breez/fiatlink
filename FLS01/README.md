@@ -44,14 +44,9 @@ Steps:
 ### Withdrawal 
 Service provides [lnurlw](https://github.com/lnurl/luds/blob/luds/03.md) to the user that user can claim at their convenience. Control of the payout is enforcable so only the pubkey who previously signed the wallet ownership verification message can be the recipient of the funds. 
 
-Using nurlw instead of invoices provided by the users addresses multiple potential issues:
+Using lnurlw instead of invoices provided by the users addresses multiple potential issues:
 1) expired invoices and thus failed payments
 2) upfront commitment to payout amounts which means long lived quotes
-
-
-Alternative options:
-1) user provides an invoice for the quoted amount
-2) user provides pubkey and provider opens a channel and pushes the amount (can be used as a backup for 1.)
 
 
 ### Units
@@ -81,9 +76,12 @@ Return a list of supported features by the provider
 | on_chain_fallback | provider supports on-chain fallback | optional
 | webhook | provider supports webhook notifications | optional
 
+Request:
+```
 GET /features
 ```
 Response:
+```
 {
   "supported_features: [
     "quotes": true,

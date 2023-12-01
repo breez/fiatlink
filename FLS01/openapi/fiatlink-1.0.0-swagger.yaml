@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Example API
-  version: 1.0.0
+  title: Fiatlink FLS01
+  version: 0.0.1
 paths:
   /features:
     get:

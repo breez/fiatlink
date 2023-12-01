@@ -62,7 +62,6 @@ All units in the spec are expressed in the smallest denomination - sats and cent
 | /order         | place order                                     | required | POST |
 | /order-status  | get order status                                | required | POST |
 | /withdrawal    | get lnurlw                                      |required  | POST |
-| /payout        | get payout options                              | optional | GET  |
 | /payment-options | get supported payment options  and currencies | required | GET  |
 | /features | get supported features | required | GET  |
 

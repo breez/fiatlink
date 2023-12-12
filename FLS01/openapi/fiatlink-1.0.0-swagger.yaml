@@ -1,4 +1,4 @@
-<openapi: 3.0.0
+openapi: 3.0.0
 info:
   title: Fiatlink FLS01
   version: 1.0.0
@@ -80,10 +80,11 @@ paths:
                   type: string
                   format: uuid
                   example: 8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6
+                  description: serves as identifier of the application
                 signature:
                   type: string
                   example: rdfe8mi98o7am51jpocda1zp5d8scdu7rg65nn73fs6mb69t4byer9xned1hntkeq1pqdct9z5owx6bg58w5fmny6p5q783dce8ittjh
-                  description: token signed ith the node's private key, in zbase32 format
+                  description: token signed with the node's private key, in zbase32 format
                 node_pubkey:
                   type: string
                   example: 0288037d3f0bdcfb240402b43b80cdc32e41528b3e2ebe05884aff507d71fca71a
@@ -179,6 +180,8 @@ paths:
                   is_estimate:
                     type: boolean
                     example: false
+                    description: return true if estimate or false if quote 
+                    default: true
                   btc_price:
                     type: integer
                     example: 6942000
@@ -215,6 +218,7 @@ paths:
                   type: string
                   format: url
                   example: https://webhook.example.com/
+                  description: optional webhook for notifications
                   
       responses:
         '200':

@@ -786,7 +786,9 @@
     },
     "is_estimate" : {
       "type" : "boolean",
-      "example" : false
+      "description" : "return true if estimate or false if quote",
+      "example" : false,
+      "default" : true
     },
     "btc_price" : {
       "type" : "integer",
@@ -970,6 +972,7 @@
     },
     "webhook_url" : {
       "type" : "string",
+      "description" : "optional webhook for notifications",
       "format" : "url",
       "example" : "https://webhook.example.com/"
     }
@@ -1018,11 +1021,13 @@
     },
     "app_id" : {
       "type" : "string",
+      "description" : "serves as identifier of the application",
       "format" : "uuid",
       "example" : "8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6"
     },
     "signature" : {
       "type" : "string",
+      "description" : "token signed with the node's private key, in zbase32 format",
       "example" : "rdfe8mi98o7am51jpocda1zp5d8scdu7rg65nn73fs6mb69t4byer9xned1hntkeq1pqdct9z5owx6bg58w5fmny6p5q783dce8ittjh"
     },
     "node_pubkey" : {

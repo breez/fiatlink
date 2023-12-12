@@ -1,0 +1,424 @@
+openapi: 3.0.0
+info:
+  title: Fiatlink FLS01
+  version: 1.0.0
+paths:
+  /features:
+    get:
+      summary: Get supported features
+      description: Endpoint to retrieve supported features
+      responses:
+        '200':
+          description: List of supported features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  supported_features:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        quotes:
+                          type: boolean
+                          example: true
+                        estimates:
+                          type: boolean
+                          example: true
+                        on_chain_fallback:
+                          type: boolean
+                          example: false
+                        webhook:
+                          type: boolean
+                          example: true
+  /verify:
+    get:
+      summary: Provides token for authentication
+      description: Request a token to be signed by the reciever node as proof of ownership
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                required: 
+                - session_id
+                - expires_on
+                properties:
+                  session_id:
+                    type: string
+                    format: uuid
+                    example: d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5
+                  token:
+                    type: string
+                    example: yyq6qpj2a
+                  expires_on:
+                    type: string
+                    format: date-time
+                    example: '2023-09-20T00:25:11.123Z'
+  /session:
+    post:
+      summary: Start a session
+      description: Start a session with optional signed proof of ownership. If Proof of Ownership is not required signature can be a random alphanumeric value.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: 
+              - session_id
+              - signature
+              properties:
+                session_id:
+                  type: string
+                  format: uuid
+                  example: d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5
+                app_id:
+                  type: string
+                  format: uuid
+                  example: 8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6
+                  description: serves as identifier of the application
+                signature:
+                  type: string
+                  example: rdfe8mi98o7am51jpocda1zp5d8scdu7rg65nn73fs6mb69t4byer9xned1hntkeq1pqdct9z5owx6bg58w5fmny6p5q783dce8ittjh
+                  description: token signed with the node's private key, in zbase32 format
+                node_pubkey:
+                  type: string
+                  example: 0288037d3f0bdcfb240402b43b80cdc32e41528b3e2ebe05884aff507d71fca71a
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                required: 
+                - session_id
+                - expires_on
+                properties:
+                  session_id:
+                    type: string
+                    format: uuid
+                    example: d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5
+                  app_id:
+                    type: string
+                    format: uuid
+                    example: 8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6
+                  expires_on:
+                    type: string
+                    format: date-time
+                    example: '2023-09-20T00:25:11.123Z'
+  /quote:
+    post:
+      summary: Get a quote or estimate
+      description: Get a an quote or estimate from the provider based on amount of fiat you want to spend
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              oneOf:
+                - required: [session_id, amount_fiat, currency_id, payment_option_id]
+                  properties:
+                    session_id:
+                      type: string
+                      format: uuid
+                      example: d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5
+                    amount_fiat:
+                      type: integer
+                      example: 100000
+                    currency_id:
+                      type: integer
+                      example: 1
+                    payment_option_id:
+                      type: integer
+                      example: 1
+                - required: [session_id, amount_btc, currency_id, payment_option_id]
+                  properties:
+                    session_id:
+                      type: string
+                      format: uuid
+                      example: d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5
+                    amount_btc:
+                      type: integer
+                      example: 5000000
+                    currency_id:
+                      type: integer
+                      example: 1
+                    payment_option_id:
+                      type: integer
+                      example: 1
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [currency_id, payment_option_id, btc_price,order_fee,is_estimate,amount_sats,amount_fiat]
+                properties:
+                  quote_id:
+                    type: string
+                    format: uuid
+                    example: 8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6
+                  amount_fiat:
+                    type: integer
+                    example: 100000
+                  currency_id:
+                    type: integer
+                    example: 1
+                  payment_option_id:
+                    type: integer
+                    example: 1
+                  amount_sats:
+                    type: integer
+                    example: 800000
+                  is_estimate:
+                    type: boolean
+                    example: false
+                    description: return true if estimate or false if quote 
+                    default: true
+                  btc_price:
+                    type: integer
+                    example: 6942000
+                  order_fee:
+                    type: integer
+                    example: 1234
+                  expires_on:
+                    type: string
+                    format: date-time
+                    example: '2023-09-20T00:25:11.123Z'
+  /order:
+    post:
+      summary: Create an order
+      description: Confirm an order from quote and get payment information in return
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: 
+              - session_id
+              - quote_id
+              properties:
+                session_id:
+                  type: string
+                  format: uuid
+                  example: d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5
+                quote_id:
+                  type: string
+                  format: uuid
+                  example: 8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6
+                webhook_url:
+                  type: string
+                  format: url
+                  example: https://webhook.example.com/
+                  description: optional webhook for notifications
+                  
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  order_id:
+                    type: string
+                    format: uuid
+                    example: 8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6
+                  order_status:
+                    type: string
+                    example: placed
+                  amount_fiat:
+                    type: integer
+                    example: 100000
+                  currency_id:
+                    type: integer
+                    example: 1
+                  payment_option_id:
+                    type: integer
+                    example: 1
+                  amount_sats:
+                    type: integer
+                    example: 800000
+                  expires_on:
+                    description: by when the payment needs to arrive for the order to be honored
+                    type: string
+                    format: date-time
+                    example: '2023-09-20T00:25:11.123Z'
+                  payment_info:
+                    type: object
+                    additionalProperties: true
+  /order-status:
+    post:
+      summary: Get order status
+      description: This endpoint returns the status of one or more orders based on the session and order ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                session_id:
+                  type: string
+                  format: uuid
+                  example: d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5
+                order_id:
+                  type: string
+                  format: uuid
+                  example: 8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6
+                  required: [session_id]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    amount_fiat:
+                      type: integer
+                      example: 100000
+                    currency_id:
+                      type: integer
+                      example: 1
+                    payment_option_id:
+                      type: integer
+                      example: 1
+                    amount_sats:
+                      type: integer
+                      example: 800000
+                    btc_price:
+                      type: integer
+                      example: 6942000
+                    order_fee:
+                      type: integer
+                      example: 1234
+                    order_status:
+                      type: string
+                      example: finished
+                    order_status_date:
+                      type: string
+                      format: date-time
+                      example: '2023-09-20T00:25:11.123Z'
+  /withdrawal:
+    post:
+      summary: Initiate a withdrawal
+      description: Request lnurlw from the provider. User can provide optional fallback onchain address which will be used if the withdrawal is not claimed before the expiration date
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                session_id:
+                  type: string
+                  format: uuid
+                  example: d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5
+                order_id:
+                  type: string
+                  format: uuid
+                  example: 8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6
+                failback_onchain:
+                  type: string
+                  format: uri
+                  example: bc1qcmu7kcwrndyke09zzyl0wv3dqxwlzqkma248kj
+              required:
+                - session_id
+                - order_id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  order_id:
+                    type: string
+                    format: uuid
+                    example: 8ed13c2a-a8c6-4f0e-b43e-3fdbf1f094a6
+                  withdrawal_expiration_date:
+                    type: string
+                    format: date-time
+                    example: '2023-09-20T00:25:11.123Z'
+                  lnurlw:
+                    type: string
+                    format: uri
+                    example: 'LNURL...'
+  /payment-options:
+    post:
+      summary: Get payment options
+      description: This endpoint provides a list of payment options for different currencies, filtered by an optional currency code.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                session_id:
+                  type: string
+                  format: uuid
+                  example: d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5
+                currency_code:
+                  type: string
+                  example: EUR
+              required:
+                - session_id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  currencies:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: 
+                        type: object
+                        properties:
+                          currency_id:
+                            type: integer
+                            example: 1
+                          currency_code:
+                            type: string
+                            example: EUR
+                          payment_options:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                option:
+                                  type: string
+                                  example: SEPA
+                                id:
+                                  type: integer
+                                  example: 1
+                                fee_rate:
+                                  type: number
+                                  format: double
+                                  example: 0.005
+                                min_amount:
+                                  type: integer
+                                  example: 1000
+                                max_amount:
+                                  type: integer
+                                  example: 100000
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/ALJAZ/fiatlink/1.0.0

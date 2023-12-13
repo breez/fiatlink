@@ -11,6 +11,8 @@ The goal of this specification is to provide standardized API for applications t
 
 ## Fiat to Bitcoin
 
+[OpenAPI](https://docs.fiatlink.co/) viewer
+
 ### Wallet verification (optional)
 Some jurisdictions require wallet verification by users so this spec supports it within the flow. To ensure user's ownership of the withdrawing wallet user can sign a message. Service provides the user with a message and user returns that message or part of the predefined message which the user then returns signed with his public key:
 Example:

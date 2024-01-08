@@ -16,7 +16,7 @@ All FiatLink specifications include a "Status" field. "Status" can be one of the
 
 ## Specs
 1. [FLS00 - Transport layer](./FLS00/README.md) **DRAFT**
-2. [FLS01 - Non-kyc on-ramp API spec](./FLS01/README.md) **DRAFT**
+2. [FLS01 - Non-kyc on-ramp API spec](./FLS01/README.md) **For Implementation**
 
 ## API and SDK documentation
 - [OpenAPI](https://docs.fiatlink.co/)

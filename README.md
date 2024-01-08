@@ -5,7 +5,7 @@ The goal of this project is to provide a unified API specifications for Fiat on-
 
 As first priority we want to support on and off ramps standardization with lightning.
 
-[Telegram](https://t.me/+RhNx5d4u7p80NGZk) invite for the group.
+[Telegram](https://t.me/+6wVEdfztX1Y1NTFk) invite for the group.
 
 ## Status Specification 
 All FiatLink specifications include a "Status" field. "Status" can be one of the following:

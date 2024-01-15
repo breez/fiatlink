@@ -166,7 +166,7 @@ POST /quote
 
 { 
   "session_id": "d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5",
-  "amount_btc": 5000000 # in sats
+  "amount_sats": 5000000 # in sats
   "currency_id":1,
   "payment_option_id":1
 }

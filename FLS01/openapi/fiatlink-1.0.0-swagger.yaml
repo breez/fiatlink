@@ -137,13 +137,13 @@ paths:
                     payment_option_id:
                       type: integer
                       example: 1
-                - required: [session_id, amount_btc, currency_id, payment_option_id]
+                - required: [session_id, amount_sats, currency_id, payment_option_id]
                   properties:
                     session_id:
                       type: string
                       format: uuid
                       example: d7ef9a88-1ca1-4ac8-bc9e-da3d9824cdc5
-                    amount_btc:
+                    amount_sats:
                       type: integer
                       example: 5000000
                     currency_id:
@@ -418,7 +418,3 @@ paths:
                                 max_amount:
                                   type: integer
                                   example: 100000
-servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/ALJAZ/fiatlink/1.0.0

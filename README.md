@@ -1,9 +1,9 @@
 # FiatLink - Fiat On/Off ramp spec 
-API specification for bitcoin on and off ramps. 
+API specification for bitcoin on and off ramps. Read more [here](https://medium.com/breez-technology/building-on-lightning-flash-is-reinventing-caribbean-money-with-the-breez-sdk-d26ef8b81fb8).
 
-The goal of this project is to provide a unified API specifications for Fiat on-ramps to create interoperability and easier integration of multiple on and offramps into apps.
+The goal of this project is to provide a unified API specifications for fiat ramps to create interoperability and easier integration of multiple on and off-ramps into apps.
 
-As first priority we want to support on and off ramps standardization with lightning.
+As first priority, we want to support on/off-ramps standardization with lightning.
 
 [Telegram](https://t.me/+6wVEdfztX1Y1NTFk) invite for the group.
 
